@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório - Refatoração de Testes e Detecção de Test Smells</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 14mm 16mm 14mm 16mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.42;
+      font-size: 9.8pt;
+      background: #ffffff;
+    }
+
+    .page {
+      page-break-after: always;
+      position: relative;
+      height: 268mm;
+      max-height: 268mm;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page:last-child {
+      page-break-after: avoid;
+    }
+
+    .cover-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      text-align: center;
+      padding: 15mm 8mm 10mm 8mm;
+    }
+
+    .institution {
+      font-size: 13pt;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #0f172a;
+      text-transform: uppercase;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 12px;
+    }
+
+    .discipline {
+      margin-top: 8px;
+      font-size: 11pt;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .title-block {
+      margin: auto 0;
+    }
+
+    .main-title {
+      font-size: 24pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+
+    .sub-title {
+      font-size: 12pt;
+      color: #475569;
+      font-weight: 400;
+      max-width: 88%;
+      margin: 0 auto;
+      line-height: 1.45;
+    }
+
+    .badge-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 8.5pt;
+      font-weight: 600;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .author-block {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 22px;
+      text-align: left;
+      margin: 0 auto 15mm auto;
+      width: 92%;
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      row-gap: 8px;
+      font-size: 9.8pt;
+    }
+
+    .author-label {
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .author-val {
+      color: #0f172a;
+      font-weight: 500;
+    }
+
+    .author-val a {
+      color: #2563eb;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .footer-date {
+      font-size: 9.5pt;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Page Content Styling */
+    h2 {
+      font-size: 13.5pt;
+      color: #0f172a;
+      font-weight: 700;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h2 .num {
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 9pt;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h3 {
+      font-size: 10.5pt;
+      color: #1e293b;
+      font-weight: 700;
+      margin: 8px 0 4px 0;
+    }
+
+    p {
+      margin-bottom: 6px;
+      text-align: justify;
+      line-height: 1.4;
+    }
+
+    ul, ol {
+      margin-left: 18px;
+      margin-bottom: 6px;
+    }
+
+    li {
+      margin-bottom: 3px;
+      line-height: 1.35;
+    }
+
+    .card {
+      background: #f8fafc;
+      border-left: 3.5px solid #2563eb;
+      border-radius: 4px;
+      padding: 7px 11px;
+      margin-bottom: 7px;
+      border-top: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .card.warning {
+      border-left-color: #ef4444;
+      background: #fef2f2;
+      border-top-color: #fecaca;
+      border-right-color: #fecaca;
+      border-bottom-color: #fecaca;
+    }
+
+    .card.warning .card-title {
+      color: #b91c1c;
+    }
+
+    .card.success {
+      border-left-color: #10b981;
+      background: #f0fdf4;
+      border-top-color: #bbf7d0;
+      border-right-color: #bbf7d0;
+      border-bottom-color: #bbf7d0;
+    }
+
+    .card.success .card-title {
+      color: #047857;
+    }
+
+    .card-title {
+      font-size: 9.8pt;
+      font-weight: 700;
+      color: #1d4ed8;
+      margin-bottom: 3px;
+    }
+
+    pre, code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 8.2pt;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 7px 10px;
+      border-radius: 5px;
+      font-size: 7.2pt;
+      line-height: 1.32;
+      overflow: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: 6px;
+    }
+
+    pre .kw { color: #f43f5e; font-weight: 600; }
+    pre .fn { color: #38bdf8; }
+    pre .str { color: #34d399; }
+    pre .cm { color: #94a3b8; font-style: italic; }
+    pre .err { color: #ef4444; font-weight: 700; }
+    pre .warn { color: #f59e0b; font-weight: 700; }
+    pre .file { color: #a78bfa; }
+
+    .diff-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .diff-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .diff-header {
+      padding: 3px 8px;
+      font-size: 7.8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .diff-header.before {
+      background: #fee2e2;
+      color: #991b1b;
+      border-bottom: 1px solid #fecaca;
+    }
+
+    .diff-header.after {
+      background: #dcfce7;
+      color: #166534;
+      border-bottom: 1px solid #bbf7d0;
+    }
+
+    .diff-box pre {
+      margin: 0;
+      border-radius: 0;
+      font-size: 6.9pt;
+      padding: 6px 8px;
+      overflow: hidden;
+    }
+
+    .table-custom {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+      margin-top: 4px;
+    }
+
+    .table-custom th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 700;
+      padding: 4px 6px;
+      text-align: left;
+      border: 1px solid #cbd5e1;
+    }
+
+    .table-custom td {
+      padding: 4px 6px;
+      border: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+
+    .terminal {
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-radius: 5px;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+
+    .terminal-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .terminal-body {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 7.2pt;
+      color: #cbd5e1;
+      line-height: 1.3;
+      white-space: pre-wrap;
+      overflow: hidden;
+    }
+
+    .header-tag {
+      font-size: 7.8pt;
+      color: #64748b;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== PÁGINA 1: CAPA ==================== -->
+  <div class="page">
+    <div class="cover-container">
+      <div>
+        <div class="institution">Pontifícia Universidade Católica de Minas Gerais — PUC Minas</div>
+        <div class="discipline">Disciplina: Teste de Software</div>
+      </div>
+
+      <div class="title-block">
+        <h1 class="main-title">Refatoração de Testes e<br>Detecção de Test Smells</h1>
+        <p class="sub-title">
+          Diagnóstico estrutural com ESLint, análise sistemática de anti-padrões de testes e refatoração arquitetural baseada no padrão Arrange-Act-Assert (AAA).
+        </p>
+        <div class="badge-bar">
+          <span class="badge">Jest Framework</span>
+          <span class="badge">ESLint + eslint-plugin-jest</span>
+          <span class="badge">Qualidade de Código</span>
+          <span class="badge">Padrão AAA</span>
+        </div>
+      </div>
+
+      <div class="author-block">
+        <div class="author-grid">
+          <span class="author-label">Aluno:</span>
+          <span class="author-val">Luis Henrique</span>
+
+          <span class="author-label">Matrícula:</span>
+          <span class="author-val">Matrícula do Aluno</span>
+
+          <span class="author-label">Instituição / Curso:</span>
+          <span class="author-val">PUC Minas — Engenharia de Software / Ciência da Computação</span>
+
+          <span class="author-label">Repositório Fork:</span>
+          <span class="author-val"><a href="https://github.com/BGLuis/test-smelly">https://github.com/BGLuis/test-smelly</a></span>
+
+          <span class="author-label">Repositório Base:</span>
+          <span class="author-val"><a href="https://github.com/CleitonSilvaT/test-smelly">https://github.com/CleitonSilvaT/test-smelly</a></span>
+        </div>
+      </div>
+
+      <div class="footer-date">Belo Horizonte — 2026</div>
+    </div>
+  </div>
+
+  <!-- ==================== PÁGINA 2: ANÁLISE DE TEST SMELLS ==================== -->
+  <div class="page">
+    <div class="header-tag">Relatório Técnico &bull; Seção 1</div>
+    <h2><span class="num">1</span> Análise Detalhada dos Test Smells Identificados</h2>
+
+    <p>
+      Na avaliação da suíte de testes original presente em <code>test/userService.smelly.test.js</code>, constatou-se que todos os testes passavam na execução inicial do Jest. No entanto, o código apresentava severos <strong>Test Smells</strong> que comprometiam a clareza, o determinismo e a eficácia na detecção de bugs reais. A seguir, analisam-se três dos principais smells encontrados:
+    </p>
+
+    <div class="card warning">
+      <div class="card-title">1.1. Lógica Condicional e Asserção Condicional (Conditional Test Logic / Conditional Expect)</div>
+      <p>
+        <strong>O que é e onde ocorre:</strong> Ocorre no teste <code>deve desativar usuários se eles não forem administradores</code>. O autor utilizou um laço <code>for (const user of todosOsUsuarios)</code> acoplado a um desvio condicional <code>if (!user.isAdmin) { ... } else { ... }</code>, invocando <code>expect</code> dentro desses blocos ramificados.
+      </p>
+      <p>
+        <strong>Por que é um mau cheiro:</strong> Testes unitários devem ser estritamente lineares e determinísticos. Estruturas de controle de fluxo adicionam complexidade ciclomática ao teste, transferindo a ele a responsabilidade de tomar decisões lógicas que deveriam pertencer ao código sob teste.
+      </p>
+      <p>
+        <strong>Risco que representa:</strong> Alto risco de <em>falsos positivos</em> e <em>asserções silenciosamente ignoradas</em>. Se a lista estiver vazia ou mutada, os blocos <code>expect</code> podem nunca ser executados, e o Jest reportará sucesso sem validar nada. O linter flagra isso como erro em <code>jest/no-conditional-expect</code>.
+      </p>
+    </div>
+
+    <div class="card warning">
+      <div class="card-title">1.2. Exceção Silenciosa e Falha Oculta (Silent Catch / Missing Assertion on Failure)</div>
+      <p>
+        <strong>O que é e onde ocorre:</strong> Ocorre no teste <code>deve falhar ao criar usuário menor de idade</code>. O teste envolve a chamada em um bloco <code>try { userService.createUser(...) } catch (e) { expect(e.message)... }</code>, sem garantia de que a exceção foi lançada.
+      </p>
+      <p>
+        <strong>Por que é um mau cheiro:</strong> O bloco <code>catch</code> só executa se o erro ocorrer. Se a validação for removida ou falhar silenciosamente, o fluxo ignora o <code>catch</code> e o teste é concluído em verde sem acusar a quebra da regra de negócio.
+      </p>
+      <p>
+        <strong>Risco que representa:</strong> Falso positivo crônico, mascarando regressões críticas. Viola o princípio de falhar ruidosamente. O ESLint detecta essa estrutura incorreta através da regra <code>jest/no-conditional-expect</code>.
+      </p>
+    </div>
+
+    <div class="card warning">
+      <div class="card-title">1.3. Teste Ansioso e Múltiplas Responsabilidades (Eager Test / Assertion Roulette)</div>
+      <p>
+        <strong>O que é e onde ocorre:</strong> No teste <code>deve criar e buscar um usuário corretamente</code>, dois casos de uso distintos são testados no mesmo bloco (criação e busca), com 4 asserções acumuladas e dependência do fixture global <code>dadosUsuarioPadrao</code> (Convidado Misterioso).
+      </p>
+      <p>
+        <strong>Por que é um mau cheiro:</strong> Viola a Responsabilidade Única (SRP). Um teste deve validar apenas um comportamento por cenário.
+      </p>
+      <p>
+        <strong>Risco que representa:</strong> Roleta de asserções (<em>Assertion Roulette</em>). Em caso de falha, é difícil diagnosticar de imediato se o defeito está na persistência da criação ou no algoritmo de busca, elevando o custo de manutenção.
+      </p>
+    </div>
+
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Test Smell</th>
+          <th>Regra ESLint Associada</th>
+          <th>Severidade</th>
+          <th>Impacto Principal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Conditional Expect</strong></td>
+          <td><code>jest/no-conditional-expect</code></td>
+          <td>Erro</td>
+          <td>Asserções ignoradas silenciosamente sob ramificações de fluxo</td>
+        </tr>
+        <tr>
+          <td><strong>Silent Catch</strong></td>
+          <td><code>jest/no-conditional-expect</code></td>
+          <td>Erro</td>
+          <td>Falso positivo caso a exceção esperada não seja lançada</td>
+        </tr>
+        <tr>
+          <td><strong>Disabled Test</strong></td>
+          <td><code>jest/no-disabled-tests</code></td>
+          <td>Aviso</td>
+          <td>Funcionalidades sem validação ativa (TODO órfão na suíte)</td>
+        </tr>
+        <tr>
+          <td><strong>Ghost Test</strong></td>
+          <td><code>jest/expect-expect</code></td>
+          <td>Aviso</td>
+          <td>Testes vazios que executam sem validar nenhum resultado</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== PÁGINA 3: PROCESSO DE REFATORAÇÃO ==================== -->
+  <div class="page">
+    <div class="header-tag">Relatório Técnico &bull; Seção 2</div>
+    <h2><span class="num">2</span> Processo de Refatoração Arquitetural e Aplicação do Padrão AAA</h2>
+
+    <p>
+      Para solucionar os problemas diagnosticados, elaborou-se o arquivo <code>__tests__/userService.clean.test.js</code>. O processo foi conduzido sob o padrão <strong>Arrange, Act, Assert (AAA)</strong>, conferindo a cada teste foco, independência e legibilidade.
+    </p>
+
+    <h3>2.1. Estudo de Caso: Refatoração do Teste de Desativação (Eliminação de Loops e Condicionais)</h3>
+
+    <div class="diff-container">
+      <div class="diff-box">
+        <div class="diff-header before">&times; Antes: userService.smelly.test.js</div>
+        <pre><span class="cm">// Lógica condicional, loop e múltiplos cenários</span>
+<span class="fn">test</span>(<span class="str">'deve desativar usuários se eles...'</span>, () => {
+  <span class="kw">const</span> usuarioComum = userService.<span class="fn">createUser</span>(...);
+  <span class="kw">const</span> usuarioAdmin = userService.<span class="fn">createUser</span>(...);
+  <span class="kw">const</span> todos = [usuarioComum, usuarioAdmin];
+
+  <span class="kw">for</span> (<span class="kw">const</span> user <span class="kw">of</span> todos) {
+    <span class="kw">const</span> res = userService.<span class="fn">deactivateUser</span>(user.id);
+    <span class="kw">if</span> (!user.isAdmin) {
+      <span class="cm">// Expect condicional (ESLint Erro!)</span>
+      <span class="fn">expect</span>(res).<span class="fn">toBe</span>(<span class="kw">true</span>);
+      <span class="kw">const</span> u = userService.<span class="fn">getUserById</span>(user.id);
+      <span class="fn">expect</span>(u.status).<span class="fn">toBe</span>(<span class="str">'inativo'</span>);
+    } <span class="kw">else</span> {
+      <span class="fn">expect</span>(res).<span class="fn">toBe</span>(<span class="kw">false</span>);
+    }
+  }
+});</pre>
+      </div>
+
+      <div class="diff-box">
+        <div class="diff-header after">&check; Depois: __tests__/userService.clean.test.js</div>
+        <pre><span class="cm">// 1. Caso isolado para Usuário Comum</span>
+<span class="fn">test</span>(<span class="str">'deve desativar com sucesso usuário comum'</span>, () => {
+  <span class="cm">// Arrange</span>
+  <span class="kw">const</span> user = userService.<span class="fn">createUser</span>(<span class="str">'Comum'</span>, <span class="str">'c@t.com'</span>, 30, <span class="kw">false</span>);
+  <span class="cm">// Act</span>
+  <span class="kw">const</span> ok = userService.<span class="fn">deactivateUser</span>(user.id);
+  <span class="cm">// Assert</span>
+  <span class="fn">expect</span>(ok).<span class="fn">toBe</span>(<span class="kw">true</span>);
+  <span class="kw">const</span> atual = userService.<span class="fn">getUserById</span>(user.id);
+  <span class="fn">expect</span>(atual.status).<span class="fn">toBe</span>(<span class="str">'inativo'</span>);
+});
+
+<span class="cm">// 2. Caso isolado para Usuário Administrador</span>
+<span class="fn">test</span>(<span class="str">'não deve desativar usuário administrador'</span>, () => {
+  <span class="cm">// Arrange</span>
+  <span class="kw">const</span> admin = userService.<span class="fn">createUser</span>(<span class="str">'Admin'</span>, <span class="str">'a@t.com'</span>, 40, <span class="kw">true</span>);
+  <span class="cm">// Act</span>
+  <span class="kw">const</span> ok = userService.<span class="fn">deactivateUser</span>(admin.id);
+  <span class="cm">// Assert</span>
+  <span class="fn">expect</span>(ok).<span class="fn">toBe</span>(<span class="kw">false</span>);
+  <span class="kw">const</span> atual = userService.<span class="fn">getUserById</span>(admin.id);
+  <span class="fn">expect</span>(atual.status).<span class="fn">toBe</span>(<span class="str">'ativo'</span>);
+});</pre>
+      </div>
+    </div>
+
+    <h3>2.2. Decisões Técnicas de Refatoração e Justificativas</h3>
+    <ul>
+      <li>
+        <strong>Decomposição em Testes Atômicos:</strong> A separação dos fluxos de usuário comum e administrador permitiu isolar completamente as causas de falha. A suíte passa a documentar explicitamente cada regra de negócio como especificação executável.
+      </li>
+      <li>
+        <strong>Eliminação Completa de Estruturas Condicionais:</strong> A erradicação do laço <code>for</code> e dos blocos <code>if/else</code> garantiu fluxo 100% linear e determinístico, extinguindo todas as 3 ocorrências de <code>jest/no-conditional-expect</code> apontadas pelo linter naquele método.
+      </li>
+      <li>
+        <strong>Tratamento Idiomático de Exceções com <code>toThrow</code>:</strong> Substituiu-se o bloco <code>try/catch</code> por <code>expect(() => userService.createUser(...)).toThrow('O usuário deve ser maior de idade.')</code>. Se o método não disparar o erro esperado, o Jest acusa falha imediatamente.
+      </li>
+      <li>
+        <strong>Resiliência a Mudanças Estéticas (Anti-Fragile):</strong> No relatório de usuários, as asserções passaram a validar a presença semântica dos dados essenciais (IDs, nomes e status) e do cabeçalho funcional, deixando de quebrar por variações de espaçamento ou ordenação.
+      </li>
+      <li>
+        <strong>Reativação e Implementação de Testes Pendentes:</strong> O teste marcado como <code>test.skip</code> foi reativado e implementado com asserções reais, validando o comportamento de relatório com base de dados vazia.
+      </li>
+    </ul>
+  </div>
+
+  <!-- ==================== PÁGINA 4: RELATÓRIO DO LINTER E CONCLUSÃO ==================== -->
+  <div class="page">
+    <div class="header-tag">Relatório Técnico &bull; Seção 3</div>
+    <h2><span class="num">3</span> Relatório da Ferramenta Estática e Conclusão</h2>
+
+    <h3>3.1. Execução Inicial do ESLint no Código Original (Detecção Automatizada)</h3>
+    <p>
+      Após a configuração das regras no arquivo <code>.eslintrc.json</code> com o plugin <code>eslint-plugin-jest</code>, a execução do comando <code>npx eslint .</code> identificou <strong>6 problemas (4 erros e 2 avisos)</strong> na suíte <code>test/userService.smelly.test.js</code>:
+    </p>
+
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="terminal-dot dot-red"></span>
+        <span class="terminal-dot dot-yellow"></span>
+        <span class="terminal-dot dot-green"></span>
+      </div>
+      <div class="terminal-body"><span class="file">/home/luis/Documents/puc/testes/test-smell/test/userService.smelly.test.js</span>
+  44:9  <span class="err">error</span>    Avoid calling `expect` conditionally`  <span class="file">jest/no-conditional-expect</span>
+  46:9  <span class="err">error</span>    Avoid calling `expect` conditionally`  <span class="file">jest/no-conditional-expect</span>
+  49:9  <span class="err">error</span>    Avoid calling `expect` conditionally`  <span class="file">jest/no-conditional-expect</span>
+  73:7  <span class="err">error</span>    Avoid calling `expect` conditionally`  <span class="file">jest/no-conditional-expect</span>
+  77:3  <span class="warn">warning</span>  Tests should not be skipped            <span class="file">jest/no-disabled-tests</span>
+  77:3  <span class="warn">warning</span>  Test has no assertions                 <span class="file">jest/expect-expect</span>
+
+<span class="err">✖ 6 problems (4 errors, 2 warnings)</span></div>
+    </div>
+
+    <p>
+      <strong>Como a ferramenta automatizou a detecção:</strong> O linter constrói a Árvore Sintática Abstrata (AST) do arquivo de teste. Ao inspecionar os nós onde a função <code>expect()</code> é invocada, o plugin verifica se o nó ancestral direto pertence a uma estrutura de controle (como <code>IfStatement</code>, <code>ForStatement</code> ou <code>CatchClause</code>). Caso positivo, sinaliza o smell instantaneamente com a linha e coluna exatas, sem executar o código.
+    </p>
+
+    <h3>3.2. Validação da Suíte Refatorada</h3>
+    <p>
+      Na validação final, a suíte limpa obteve conformidade plena em ambas as ferramentas:
+    </p>
+
+    <div class="card success">
+      <div class="card-title">&check; Conformidade Total e Zero Violações no Linter</div>
+      <p style="margin: 0; font-size: 8.8pt;">
+        Execução de <code>npx eslint __tests__/userService.clean.test.js</code>: <strong>0 erros, 0 avisos (código 100% limpo)</strong>.<br>
+        Execução de <code>npm test</code>: <strong>2 test suites executadas com 100% de aprovação (14 testes passando)</strong>.
+      </p>
+    </div>
+
+    <h3>3.3. Conclusão e Reflexão</h3>
+    <p>
+      A realização desta atividade evidencia que uma suíte de testes que atinge 100% de passagem ("testes verdes") não é garantia suficiente de qualidade de software. Testes que contêm <em>Test Smells</em> — como asserções condicionais, captura silenciosa de exceções e acoplamento frágil — introduzem fragilidade arquitetural e falsa confiança na equipe de engenharia.
+    </p>
+    <p>
+      A adoção de ferramentas de análise estática como o ESLint integrada a plugins de teste (<code>eslint-plugin-jest</code>) atua como um <em>guard-rail</em> fundamental no pipeline de Integração Contínua (CI). Essa abordagem automatizada impede que más práticas de teste sejam integradas ao repositório principal, assegurando que os testes permaneçam limpos, modulares, fáceis de manter e verdadeiramente eficazes na detecção precoce de regressões e defeitos de software.
+    </p>
+  </div>
+
+</body>
+</html>
