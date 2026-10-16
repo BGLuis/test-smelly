@@ -1,30 +1,74 @@
-# Laboratório de Test Smells - Gerenciador de Usuários
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/graph.svg?title=Test+Smells+Lab&subtitle=Detecção+e+refatoração+de+Test+Smells+com+Jest+e+ESLint&align=left&font=geist-mono&mode=dark" /><img alt="Test Smells Lab" src="https://shieldcn.dev/header/graph.svg?title=Test+Smells+Lab&subtitle=Detecção+e+refatoração+de+Test+Smells+com+Jest+e+ESLint&align=left&font=geist-mono&mode=light" /></picture>
+</p>
 
-Este repositório serve como base para o trabalho prático sobre **Test Smells** na disciplina de Teste de Software. Ele contém uma suíte de testes que, apesar de passar, está repleta de "maus cheiros" (smells) que comprometem sua qualidade, manutenibilidade e eficácia.
+<p align="center"><b>Português (BR)</b> · <a href="README.en.md">English</a></p>
 
-## Contexto do Projeto
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/stars/BGLuis/test-smelly.svg?variant=secondary&size=sm&mode=dark" /><img alt="GitHub Stars" src="https://shieldcn.dev/github/stars/BGLuis/test-smelly.svg?variant=secondary&size=sm&mode=light" /></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/forks/BGLuis/test-smelly.svg?variant=secondary&size=sm&mode=dark" /><img alt="GitHub Forks" src="https://shieldcn.dev/github/forks/BGLuis/test-smelly.svg?variant=secondary&size=sm&mode=light" /></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/watchers/BGLuis/test-smelly.svg?variant=secondary&size=sm&mode=dark" /><img alt="Watchers" src="https://shieldcn.dev/github/watchers/BGLuis/test-smelly.svg?variant=secondary&size=sm&mode=light" /></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/contributors/BGLuis/test-smelly.svg?theme=emerald&size=sm&mode=dark" /><img alt="Contributors" src="https://shieldcn.dev/github/contributors/BGLuis/test-smelly.svg?theme=emerald&size=sm&mode=light" /></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/license/BGLuis/test-smelly.svg?variant=ghost&size=sm&mode=dark" /><img alt="License" src="https://shieldcn.dev/github/license/BGLuis/test-smelly.svg?variant=ghost&size=sm&mode=light" /></picture>
+</p>
 
-Imagine que você foi contratado(a) como Engenheiro(a) de Qualidade de Software em uma equipe que está desenvolvendo um serviço de gerenciamento de usuários (`UserService`).
+<p align="center">
+  <img alt="JavaScript" src="https://shieldcn.dev/badge/Language-JavaScript-F7DF1E.svg?logo=javascript&variant=branded&size=sm" />
+  <img alt="Node.js" src="https://shieldcn.dev/badge/Runtime-Node.js-5FA04E.svg?logo=nodedotjs&variant=branded&size=sm" />
+  <img alt="Jest" src="https://shieldcn.dev/badge/Framework-Jest-C21325.svg?logo=jest&variant=branded&size=sm" />
+  <img alt="ESLint" src="https://shieldcn.dev/badge/Tool-ESLint-4B32C3.svg?logo=eslint&variant=branded&size=sm" />
+  <img alt="Babel" src="https://shieldcn.dev/badge/Tool-Babel-F9DC3E.svg?logo=babel&variant=branded&size=sm" />
+</p>
 
-A suíte de testes em `__tests__/userService.smelly.test.js` foi escrita por um desenvolvedor que se concentrou apenas em fazer os testes passarem, sem se preocupar com boas práticas. O resultado é um código de teste frágil, obscuro e difícil de manter.
+# 📖 Sobre
 
-Sua missão é analisar, diagnosticar e refatorar essa suíte de testes, transformando-a em um exemplo de código de teste limpo e robusto.
+O **Test Smells Lab** é um projeto para análise estática e refatoração de testes automatizados com foco na identificação e eliminação de *Test Smells* (anti-padrões em código de teste).
 
-## Sua Missão
+O repositório simula um serviço de gerenciamento de usuários (`UserService`) e disponibiliza duas suítes de testes:
+- `test/userService.smelly.test.js`: a suíte inicial com anti-padrões deliberados (lógica condicional com loops/ifs, captura silenciosa de exceções via `try/catch`, testes ansiosos com múltiplas ações e asserções frágeis).
+- `__tests__/userService.clean.test.js`: a suíte refatorada que aplica rigorosamente o padrão **Arrange, Act, Assert (AAA)**, garantindo linearidade, testes atômicos e conformidade plena com regras estáticas do ESLint (`eslint-plugin-jest`).
 
-Seu trabalho será dividido em três etapas principais:
+O projeto conta ainda com um relatório técnico detalhado documentando a análise e o processo de refatoração em [`Relatorio_Refatoracao_Test_Smells.pdf`](Relatorio_Refatoracao_Test_Smells.pdf).
 
-1.  **Analisar:** Identificar manualmente e com a ajuda de ferramentas de análise estática (ESLint) os diferentes Test Smells presentes no código.
-2.  **Refatorar:** Reescrever os testes em um novo arquivo (`userService.clean.test.js`), corrigindo os problemas encontrados e aplicando as melhores práticas, como o padrão **Arrange, Act, Assert (AAA)**.
-3.  **Validar:** Provar que a refatoração foi bem-sucedida, garantindo que os novos testes passem, estejam livres de avisos do linter e sejam mais claros e eficazes.
+# 📋 Motivo
 
-## Como Começar (Setup)
+Trabalho prático da disciplina de Teste de Software (PUC Minas) focado na identificação e refatoração de Test Smells com Jest e ESLint
 
-Siga os passos abaixo para preparar seu ambiente de trabalho.
+# 💻 Como iniciar
 
-**1. Clone o repositório:**
+### Requisitos
 
-```bash
-git clone [URL_DO_SEU_FORK_DO_REPOSITORIO]
-cd test-smelly
-```
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
+
+### Instalação
+
+1. Clone o repositório:
+
+   ```sh
+   git clone https://github.com/BGLuis/test-smelly.git
+   ```
+
+2. Entre no diretório do projeto:
+
+   ```sh
+   cd test-smelly
+   ```
+
+3. Instale as dependências e execute os testes e o linter:
+
+   ```sh
+   npm install
+   npm test
+   npm run lint
+   ```
+
+# 🤝 Contribuidores
+
+<a href="https://github.com/BGLuis/test-smelly/graphs/contributors">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/contributors/BGLuis/test-smelly.svg?title=false&preset=transparent&border=false&mode=dark" /><img alt="Contribuidores" src="https://shieldcn.dev/contributors/BGLuis/test-smelly.svg?title=false&preset=transparent&border=false&mode=light" /></picture>
+</a>
+
+# 📄 Licença
+
+Distribuído sob a licença [MIT](LICENSE).
